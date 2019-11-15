@@ -33,8 +33,7 @@ describe('auth-router', () => {
             .post("/api/auth/register")
             .send(newUser)
             .then(res => {
-                console.log(res.message)
-              expect(res.status).toEqual(201);
+              expect(res.status).toEqual(201); // resource inserted
             });
         })
         it('should not allow second registration with same username', () => {
@@ -42,7 +41,16 @@ describe('auth-router', () => {
             .post("/api/auth/register")
             .send(newUser)
             .then(res => {
-              expect(res.status).toBe(500);
+              expect(res.status).toBe(500); // server error
+            });
+        })
+
+        it('should not allow registration with no password', () => {
+            return request(server)
+            .post("/api/auth/register")
+            .send({ "username": "nopass" })
+            .then(res => {
+              expect(res.status).toBe(400); // bad request
             });
         })
     })
@@ -53,7 +61,7 @@ describe('auth-router', () => {
             .post("/api/auth/login")
             .send(newUser)
             .then(res => {
-              expect(res.status).toBe(200);
+              expect(res.status).toBe(200); // OK
             });
         });
 
@@ -62,7 +70,7 @@ describe('auth-router', () => {
             .post("/api/auth/login")
             .send(newUser)
             .then(res => {
-              expect(res.token).toBeDefined;
+              expect(res.token).toBeDefined; // to exist!
             });
         });
     })
